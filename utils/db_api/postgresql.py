@@ -44,7 +44,10 @@ class Database:
         id SERIAL PRIMARY KEY,
         full_name VARCHAR(255) NOT NULL,
         username varchar(255) NULL,
-        telegram_id BIGINT NOT NULL UNIQUE 
+        telegram_id BIGINT NOT NULL UNIQUE,
+        phone_number VARCHAR(255) NOT NULL,
+        gender VARCHAR(100) NOT NULL,
+        age VARCHAR(20) NOT NULL
         );
         """
         await self.execute(sql, execute=True)
@@ -57,9 +60,9 @@ class Database:
         ])
         return sql, tuple(parameters.values())
 
-    async def add_user(self, full_name, username, telegram_id):
-        sql = "INSERT INTO users (full_name, username, telegram_id) VALUES($1, $2, $3) returning *"
-        return await self.execute(sql, full_name, username, telegram_id, fetchrow=True)
+    async def add_user(self, full_name, username, telegram_id, phone_number, gender, age):
+        sql = "INSERT INTO users (full_name, username, telegram_id, phone_number, gender, age) VALUES($1, $2, $3, $4, $5, $6) returning *"
+        return await self.execute(sql, full_name, username, telegram_id, phone_number, gender, age, fetchrow=True)
 
     async def select_all_users(self):
         sql = "SELECT * FROM Users"
@@ -68,7 +71,17 @@ class Database:
     async def select_user(self, **kwargs):
         sql = "SELECT * FROM Users WHERE "
         sql, parameters = self.format_args(sql, parameters=kwargs)
-        return await self.execute(sql, *parameters, fetchrow=True)
+        data = await self.execute(sql, *parameters, fetchrow=True)
+        
+        return {
+            "full_name": data[1],
+            "username": data[2],
+            "telegram_id": data[3],
+            "phone_number":data[4],
+            "gender": data[5],
+            "age": data[6]
+        } if data else None
+
 
     async def count_users(self):
         sql = "SELECT COUNT(*) FROM Users"
