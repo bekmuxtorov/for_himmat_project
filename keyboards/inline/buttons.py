@@ -12,3 +12,17 @@ def become_member_buttons(must_member: dict):
         text='🔔 Obuna bo\'ldim', callback_data="check_button")
     become_member.insert(check_button)
     return become_member
+
+COURSES = {
+    "Sog'lom ovqtalanish guruhi": "https://bekmuxtorov_uz.t.me",
+    "Millionerlar klubi": "https://bekmuxtorov_uz.t.me",
+}
+
+course_buttons = InlineKeyboardMarkup(row_width=1)
+for course, url in COURSES.items():
+    button = InlineKeyboardButton(text=course, url=url)
+    course_buttons.insert(button)
+
+
+
+
