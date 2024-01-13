@@ -40,15 +40,14 @@ class Database:
 
     async def create_table_users(self):
         sql = """
-        CREATE TABLE IF NOT EXISTS users (
+        CREATE TABLE IF NOT EXISTS Users (
         id SERIAL PRIMARY KEY,
         full_name VARCHAR(255) NOT NULL,
         username varchar(255) NULL,
         telegram_id BIGINT NOT NULL UNIQUE,
         phone_number VARCHAR(255) NOT NULL,
         gender VARCHAR(100) NOT NULL,
-        age VARCHAR(20) NOT NULL,
-        created_at TIMESTAMP NOT NULL DEFAULT NOW()
+        age VARCHAR(20) NOT NULL
         );
         """
         await self.execute(sql, execute=True)
@@ -66,13 +65,11 @@ class Database:
         return await self.execute(sql, full_name, username, telegram_id, phone_number, gender, age, fetchrow=True)
 
     async def select_all_users(self):
-        sql = "SELECT * FROM users"
-        users = await self.execute(sql, fetch=True)
-        print("="*20)
-        print(users)
+        sql = "SELECT * FROM Users"
+        return await self.execute(sql, fetch=True)
 
     async def select_user(self, **kwargs):
-        sql = "SELECT * FROM users WHERE "
+        sql = "SELECT * FROM Users WHERE "
         sql, parameters = self.format_args(sql, parameters=kwargs)
         data = await self.execute(sql, *parameters, fetchrow=True)
         
@@ -85,28 +82,17 @@ class Database:
             "age": data[6]
         } if data else None
 
+
     async def count_users(self):
-        sql = "SELECT COUNT(*) FROM users"
+        sql = "SELECT COUNT(*) FROM Users"
         return await self.execute(sql, fetchval=True)
-
-    async def count_man_users(self):
-        sql = "SELECT COUNT(*) FROM users WHERE gender = 'Erkak';"
-        return await self.execute(sql, fetchval=True)
-
-    async def count_woman_users(self):
-        sql = "SELECT COUNT(*) FROM users WHERE gender = 'Ayol';"
-        return await self.execute(sql, fetchval=True)
-
-    async def count_users_by_time(self):
-        sql = "SELECT COUNT(*) FROM users WHERE created_at::DATE = NOW()::DATE;"
-        return await self.execute(sql,fetchval=True)
 
     async def update_user_username(self, username, telegram_id):
-        sql = "UPDATE users SET username=$1 WHERE telegram_id=$2"
+        sql = "UPDATE Users SET username=$1 WHERE telegram_id=$2"
         return await self.execute(sql, username, telegram_id, execute=True)
 
     async def delete_users(self):
-        await self.execute("DELETE FROM users WHERE TRUE", execute=True)
+        await self.execute("DELETE FROM Users WHERE TRUE", execute=True)
 
     async def drop_users(self):
-        await self.execute("DROP TABLE users", execute=True)
+        await self.execute("DROP TABLE Users", execute=True)
