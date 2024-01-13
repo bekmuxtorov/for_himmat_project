@@ -29,7 +29,7 @@ async def bot_start(message: types.Message):
     # await bot.send_message(chat_id=ADMINS[0], text=msg)
 
 
-@dp.callback_query_handler(text_contains="check_button")
+@dp.callback_query_handler(IsPrivateChat(), text_contains="check_button")
 async def is_member(call: types.CallbackQuery,):
     await call.message.delete()
     user_id = call.message.from_user.id
