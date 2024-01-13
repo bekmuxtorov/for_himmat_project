@@ -61,7 +61,7 @@ async def register(message: types.Message, state: FSMContext):
             gender=gender,
             age=age
         )
-        await message.answer(text="Siz muaffaqqiyatli ro'yhatdan o'tdingiz, \n\nQuyidagi yo'nalishlardan birini tanglashingiz mumkin va sizga guruhga qo'shilish uchun link beriladi.", reply_markup=course_buttons)
+        await message.answer(text="Siz muaffaqqiyatli ro'yhatdan o'tdingiz, \n\nQuyidagi yo'nalishlardan birini tanglashingiz va guruhga qo'shilishingiz mumkin.", reply_markup=course_buttons)
         await state.finish()
     except:
         await message.answer(text="Ro'yhatdan o'tishda qandaydir muammo chiqdi, iltimos qayta urinib ko'ring!", reply_markup=make_buttons(["Ro'yhatdan o'tish"]))

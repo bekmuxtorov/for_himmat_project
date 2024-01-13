@@ -16,8 +16,10 @@ from keyboards.inline.buttons import course_buttons
 async def bot_start(message: types.Message):
 
     user = await db.select_user(telegram_id=message.from_user.id)
+
     if user:
-        await message.answer("Marhamat o'zingizga kerakli guruhni tanlang: ", reply_markup=course_buttons)
+        full_name = user.get("full_name")
+        await message.answer(f"Xurmatli {full_name}, marhamat o'zingizga kerakli guruhni tanlang: ", reply_markup=course_buttons)
     else: 
         await message.answer("Xush kelibsiz!\n\nBotdan foydalanish uchun quyidagi tugma yordamida ro'yhatdan o'ting!", reply_markup=make_buttons(["Ro'yhatdan o'tish"]))
 
@@ -30,6 +32,12 @@ async def bot_start(message: types.Message):
 @dp.callback_query_handler(text_contains="check_button")
 async def is_member(call: types.CallbackQuery,):
     await call.message.delete()
-    await call.message.answer(text="Barcha kanallarga a'zo bo'ldingiz! \n\nRo'yatdan o'tish uchun quyidagi tugmani bosing.", reply_markup=make_buttons(["Ro'yhatdan o'tish"]))
+    user_id = call.message.from_user.id
+    user = await db.select_user(telegram_id=user_id)
+    if user:
+        full_name = user.get("full_name")
+        await call.message.answer(f"Xurmatli {full_name}, marhamat o'zingizga kerakli guruhni tanlang: ", reply_markup=course_buttons)
+    else:
+        await call.message.answer(text="Barcha kanallarga a'zo bo'ldingiz! \n\nRo'yatdan o'tish uchun quyidagi tugmani bosing.", reply_markup=make_buttons(["Ro'yhatdan o'tish"]))
     await call.answer(cache_time=60)
 
