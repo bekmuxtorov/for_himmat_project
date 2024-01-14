@@ -6,6 +6,7 @@ from asyncpg.pool import Pool
 
 from data import config
 
+
 class Database:
 
     def __init__(self):
@@ -67,20 +68,18 @@ class Database:
 
     async def select_all_users(self):
         sql = "SELECT * FROM users"
-        users = await self.execute(sql, fetch=True)
-        print("="*20)
-        print(users)
+        return await self.execute(sql, fetch=True)
 
     async def select_user(self, **kwargs):
         sql = "SELECT * FROM users WHERE "
         sql, parameters = self.format_args(sql, parameters=kwargs)
         data = await self.execute(sql, *parameters, fetchrow=True)
-        
+
         return {
             "full_name": data[1],
             "username": data[2],
             "telegram_id": data[3],
-            "phone_number":data[4],
+            "phone_number": data[4],
             "gender": data[5],
             "age": data[6]
         } if data else None
@@ -99,7 +98,7 @@ class Database:
 
     async def count_users_by_time(self):
         sql = "SELECT COUNT(*) FROM users WHERE created_at::DATE = NOW()::DATE;"
-        return await self.execute(sql,fetchval=True)
+        return await self.execute(sql, fetchval=True)
 
     async def update_user_username(self, username, telegram_id):
         sql = "UPDATE users SET username=$1 WHERE telegram_id=$2"
