@@ -13,5 +13,7 @@ async def bot_echo(message: types.Message, state: FSMContext = '*'):
     user = await db.select_user(telegram_id=user_id)
     if not user:
         await message.answer("❌ Jarayon bekor qilindi.\n\nQayta urinish uchun quyidagi tugmani ezing!", reply_markup=make_buttons(["Ro'yhatdan o'tish"]))
-        await state.finish()
-        await state.reset_data()
+    else:
+        await message.answer("❌ Jarayon bekor qilindi.", reply_markup=make_buttons(["Suhbatlar", "Ustozga savol yo'llash", "Dars uchun link olish", "Taklif va e'tirozlar", "Ijtimoiy tarmoq havolalar"], row_width=1))
+    await state.finish()
+    await state.reset_data()
