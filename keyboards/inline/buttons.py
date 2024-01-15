@@ -37,3 +37,10 @@ def course_button(gender: str) -> InlineKeyboardButton:
     course_buttons.insert(button)
 
     return course_buttons
+
+
+confirmation_button = InlineKeyboardMarkup(row_width=2)
+confirmation_button.insert(InlineKeyboardButton(
+    callback_data="yes_send", text="Ha, jo'natilsin."))
+confirmation_button.insert(InlineKeyboardButton(
+    callback_data="no_send", text="Yo'q, bekor qilinsin."))
