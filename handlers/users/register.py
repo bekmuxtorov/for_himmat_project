@@ -55,8 +55,8 @@ async def register(message: types.Message, state: FSMContext):
 async def register(message: types.Message, state: FSMContext):
     age = message.text
     user_data = await state.get_data()
-    user_data["age"] = age
-    user_data["user_id"] = message.from_user.id
+    # user_data["age"] = age
+    # user_data["user_id"] = message.from_user.id
     user_id = message.from_user.id
     username = message.from_user.username
     full_name = user_data.get("full_name")
