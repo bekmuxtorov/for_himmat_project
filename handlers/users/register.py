@@ -7,7 +7,7 @@ from states.register import Register
 from filters.is_privatechat import IsPrivateChat
 
 from keyboards.default.default_buttons import contact_request_button, make_buttons
-from keyboards.inline.buttons import course_buttons
+from keyboards.inline.buttons import course_button
 
 
 @dp.message_handler(IsPrivateChat(), text="Ro'yhatdan o'tish")
@@ -26,21 +26,26 @@ async def bot_echo(message: types.Message, state: FSMContext):
 
 @dp.message_handler(IsPrivateChat(), state=Register.phone_number, content_types="contact")
 async def register(message: types.Message, state: FSMContext):
-        phone_number = message.contact.phone_number
-        await state.update_data(phone_number=phone_number)
-        await message.answer(text="Jinsingizni tanglang:", reply_markup=make_buttons(["Erkak", "Ayol", "❌ Bekor qilish"], row_width=2))
-        await Register.gender.set()
+    phone_number = message.contact.phone_number
+    await state.update_data(phone_number=phone_number)
+    await message.answer(text="Jinsingizni tanglang:", reply_markup=make_buttons(["Erkak", "Ayol", "❌ Bekor qilish"], row_width=2))
+    await Register.gender.set()
 
 
 @dp.message_handler(IsPrivateChat(), state=Register.phone_number)
 async def register(message: types.Message, state: FSMContext):
-        await message.answer("Iltimos telefon raqamingizni quyidagi tugma yordamida ulashing!", reply_markup=contact_request_button)
-        await Register.phone_number.set()
+    await message.answer("Iltimos telefon raqamingizni quyidagi tugma yordamida ulashing!", reply_markup=contact_request_button)
+    await Register.phone_number.set()
 
 
 @dp.message_handler(IsPrivateChat(), state=Register.gender)
 async def register(message: types.Message, state: FSMContext):
     gender = message.text
+    if gender not in ("Erkak", "Ayol"):
+        await message.answer("Iltimos quyidagi tugmalardan biri tanglang: ", reply_markup=make_buttons(["Erkak", "Ayol", "❌ Bekor qilish"], row_width=2))
+        await Register.gender.set()
+        return
+
     await state.update_data(gender=gender)
     await message.answer(text="Yoshingizni kiriting:\n\nNamuna: 22", reply_markup=make_buttons(["❌ Bekor qilish"]))
     await Register.age.set()
@@ -67,9 +72,8 @@ async def register(message: types.Message, state: FSMContext):
             gender=gender,
             age=age
         )
-        await message.answer(text="Siz muaffaqqiyatli ro'yhatdan o'tdingiz, \n\nQuyidagi yo'nalishlardan birini tanglashingiz va guruhga qo'shilishingiz mumkin.", reply_markup=course_buttons)
+        await message.answer(text="Siz muaffaqqiyatli ro'yhatdan o'tdingiz, \n\nQuyidagi yo'nalishlardan birini tanglashingiz va guruhga qo'shilishingiz mumkin.", reply_markup=course_button(gender))
         await state.finish()
     except:
         await message.answer(text="Ro'yhatdan o'tishda qandaydir muammo chiqdi, iltimos qayta urinib ko'ring!", reply_markup=make_buttons(["Ro'yhatdan o'tish"]))
         await state.finish()
-        

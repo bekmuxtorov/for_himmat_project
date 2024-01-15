@@ -9,7 +9,7 @@ from states.register import Register
 from filters.is_privatechat import IsPrivateChat
 
 from keyboards.default.default_buttons import contact_request_button, make_buttons
-from keyboards.inline.buttons import course_buttons
+from keyboards.inline.buttons import course_button
 
 
 @dp.message_handler(IsPrivateChat(), CommandStart())
@@ -19,7 +19,8 @@ async def bot_start(message: types.Message):
 
     if user:
         full_name = user.get("full_name")
-        await message.answer(f"Xurmatli {full_name}, marhamat o'zingizga kerakli guruhni tanlang: ", reply_markup=course_buttons)
+        gender = user.get("gender")
+        await message.answer(f"Xurmatli {full_name}, marhamat o'zingizga kerakli guruhni tanlang: ", reply_markup=course_button(gender))
     else: 
         await message.answer("Xush kelibsiz!\n\nBotdan foydalanish uchun quyidagi tugma yordamida ro'yhatdan o'ting!", reply_markup=make_buttons(["Ro'yhatdan o'tish"]))
 
@@ -36,7 +37,8 @@ async def is_member(call: types.CallbackQuery,):
     user = await db.select_user(telegram_id=user_id)
     if user:
         full_name = user.get("full_name")
-        await call.message.answer(f"Xurmatli {full_name}, marhamat o'zingizga kerakli guruhni tanlang: ", reply_markup=course_buttons)
+        gender = user.get("gender")
+        await call.message.answer(f"Xurmatli {full_name}, marhamat o'zingizga kerakli guruhni tanlang: ", reply_markup=course_button(gender))
     else:
         await call.message.answer(text="Barcha kanallarga a'zo bo'ldingiz! \n\nRo'yatdan o'tish uchun quyidagi tugmani bosing.", reply_markup=make_buttons(["Ro'yhatdan o'tish"]))
     await call.answer(cache_time=60)
