@@ -16,3 +16,6 @@ DB_NAME = env.str("DB_NAME")
 DB_HOST = env.str("DB_HOST")
 
 SPREADSHEET_ID = env.str("SPREADSHEET_ID")
+
+FOR_MAN = env.str("FOR_MAN")
+FOR_WOMAN = env.str("FOR_WOMAN")

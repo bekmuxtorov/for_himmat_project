@@ -1,6 +1,8 @@
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from loader import bot
 
+from data.config import FOR_MAN, FOR_WOMAN
+
 
 def become_member_buttons(must_member: dict):
     become_member = InlineKeyboardMarkup(row_width=1)
@@ -20,9 +22,9 @@ COURSES = {
     "Himmat 700+ o'smirlar guruhi (12-17 yosh)": "https://bekmuxtorov_uz.t.me"
 }
 
-XOS_GURUH = {
-    "Erkak": "https://bekmuxtorov_uz.t.me",
-    "Ayol": "https://bekmuxtorov_uz.t.me",
+SPECIAL_GROUPS = {
+    "Erkak": FOR_MAN,
+    "Ayol": FOR_WOMAN,
 }
 
 
@@ -33,7 +35,7 @@ def course_button(gender: str) -> InlineKeyboardButton:
         course_buttons.insert(button)
 
     button = InlineKeyboardButton(
-        text=f"Himmat 700+ xos guruhlari({gender}lar)", url=XOS_GURUH.get(gender))
+        text=f"Himmat 700+ xos guruhlari({gender}lar)", url=SPECIAL_GROUPS.get(gender))
     course_buttons.insert(button)
 
     return course_buttons
