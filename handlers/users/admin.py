@@ -5,7 +5,7 @@ import asyncio
 
 from aiogram import types
 
-from data.config import ADMINS
+from data.config import ADMINS, SPREADSHEET_ID
 from loader import dp, db, bot
 from filters.is_privatechat import IsPrivateChat
 import openpyxl
@@ -16,6 +16,7 @@ async def send_help_text(message: types.Message):
     content_text = "📝 Buyruqlar:"
     content_text += "\n\n<b>1. Buyruq:</b> /statistics\n<b>Tavsif:</b> Bot bo'yicha umumiy statistika ya'ni umumiy a'zolar soni, bir kunlik ro'yhatdan o'tgan foydalanuvchilar."
     content_text += "\n\n<b>2. Buyruq:</b> /excel\n<b>Tavsif:</b> Bot foydalanuvchilarning umumiy bazasini excel fayl ko'rinishida yuklab olish imkoniyati."
+    content_text += "\n\n<b>2. Buyruq:</b> /google_sheet\n<b>Tavsif:</b> Bot foydalanuvchilarning umumiy bazasini google sheet'da ko'rinishi imkoniyati. "
     await message.answer(content_text)
 
 
@@ -54,3 +55,11 @@ async def send_excel(message: types.Message):
     caption = f"📝 Foydalanuvchilar umumiy ro'yhati\n\n{now_date} holatiga ko'ra."
     await bot.send_document(message.from_user.id, InputFile(file), caption=caption)
     os.remove(file)
+
+
+@dp.message_handler(IsPrivateChat(), text="/google_sheet", user_id=ADMINS)
+async def send_excel(message: types.Message):
+    sheet_url = f"https://docs.google.com/spreadsheets/d/{SPREADSHEET_ID}/edit#gid=261013140"
+    text = "📝 Google sheet uchun link:"
+    text += f"\n\n{sheet_url}"
+    await message.answer(text)

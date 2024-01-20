@@ -1,3 +1,5 @@
+from utils.db_api.write_google_sheet import write_range
+from datetime import datetime as dt
 from aiogram import types
 from aiogram.dispatcher.filters.builtin import CommandStart
 from aiogram.dispatcher import FSMContext
@@ -62,6 +64,7 @@ async def register(message: types.Message, state: FSMContext):
     full_name = user_data.get("full_name")
     phone_number = user_data.get("phone_number")
     gender = user_data.get("gender")
+    create_at = dt.now().strftime("%H:%M, %m/%d/%Y")
 
     try:
         await db.add_user(
@@ -73,6 +76,8 @@ async def register(message: types.Message, state: FSMContext):
             age=age
         )
         await message.answer(text="Siz muaffaqqiyatli ro'yhatdan o'tdingiz, \n\nQuyidagi tugmalardan birini tanglashingiz va guruhga qo'shilishingiz mumkin.", reply_markup=course_button(gender))
+        write_range([full_name, username, user_id,
+                     phone_number, gender, age, create_at])
         await state.finish()
     except:
         await message.answer(text="Ro'yhatdan o'tishda qandaydir muammo chiqdi, iltimos qayta urinib ko'ring!", reply_markup=make_buttons(["Ro'yhatdan o'tish"]))
