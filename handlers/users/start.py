@@ -24,15 +24,17 @@ async def bot_start(message: types.Message):
         await message.answer("Xush kelibsiz!\n\nBotdan foydalanish uchun quyidagi tugma yordamida ro'yhatdan o'ting!", reply_markup=make_buttons(["Ro'yhatdan o'tish"]))
 
 
-@dp.callback_query_handler(IsPrivateChat(), text_contains="check_button")
+@dp.callback_query_handler(text_contains="check_button")
 async def is_member(call: types.CallbackQuery,):
-    await call.message.delete()
     user_id = call.message.from_user.id
+    await call.message.delete()
     user = await db.select_user(telegram_id=user_id)
     if user:
         full_name = user.get("full_name")
         gender = user.get("gender")
         await call.message.answer(f"Xurmatli {full_name}, marhamat o'zingizga kerakli guruhni tanlang: ", reply_markup=course_button(gender))
+        await call.answer(cache_time=60)
+        return
     else:
         await call.message.answer(text="Barcha kanallarga a'zo bo'ldingiz! \n\nRo'yatdan o'tish uchun quyidagi tugmani bosing.", reply_markup=make_buttons(["Ro'yhatdan o'tish"]))
-    await call.answer(cache_time=60)
+        return
