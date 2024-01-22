@@ -7,7 +7,8 @@ from data.config import FOR_MAN, FOR_WOMAN
 def become_member_buttons(must_member: dict):
     become_member = InlineKeyboardMarkup(row_width=1)
     for channel, title in must_member.items():
-        button = InlineKeyboardButton(text=title, url=f"{channel}")
+        channel_link = f'https://{channel}.t.me'
+        button = InlineKeyboardButton(text=title, url=f"{channel_link}")
         become_member.insert(button)
 
     check_button = InlineKeyboardButton(

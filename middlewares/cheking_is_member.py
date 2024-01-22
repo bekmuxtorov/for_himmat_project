@@ -27,10 +27,9 @@ class Asosiy_checking(BaseMiddleware):
         for channel in CHANNELS:
             holat = await check(user_id=user_id, channel=channel)
             dastlabki_holat *= holat
-
             channel = await bot.get_chat(channel)
             if not holat:
-                link = await channel.export_invite_link()
+                link = channel.username
                 must_member[link] = channel.title
         if not dastlabki_holat:
             first_text = f"📤 {hello_text}.\n\nFoydalanish uchun quyidagi kanallarga a'zo bo'lishingiz kerak!"
@@ -39,5 +38,5 @@ class Asosiy_checking(BaseMiddleware):
                 first_text = f"📤Foydalanish uchun kanallarning barchasiga a'zo bo'lishingiz kerak!"
                 await bot.send_message(user_id, first_text, reply_markup=become_member_buttons(must_member))
             else:
-                await xabar.message.reply(first_text, disable_web_page_preview=True, reply_markup=become_member_buttons(must_member))
+                await xabar.message.reply(first_text, reply_markup=become_member_buttons(must_member))
             raise CancelHandler()
