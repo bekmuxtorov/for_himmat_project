@@ -16,7 +16,6 @@ class Asosiy_checking(BaseMiddleware):
             user_id = xabar.message.from_user.id
         elif xabar.callback_query:
             user_id = xabar.callback_query.from_user.id
-            print(user_id)
             status_message = True
         else:
             return
