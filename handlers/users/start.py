@@ -26,7 +26,7 @@ async def bot_start(message: types.Message):
 
 @dp.callback_query_handler(text_contains="check_button")
 async def is_member(call: types.CallbackQuery,):
-    user_id = call.message.from_user.id
+    user_id = call.from_user.id
     await call.message.delete()
     user = await db.select_user(telegram_id=user_id)
     if user:
