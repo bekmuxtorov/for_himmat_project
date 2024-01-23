@@ -39,6 +39,9 @@ def course_button(gender: str) -> InlineKeyboardButton:
         text=f"Himmat 700+ xos guruhlari({gender}lar)", url=SPECIAL_GROUPS.get(gender))
     course_buttons.insert(button)
 
+    button = InlineKeyboardButton(
+        text="🏠 Bosh sahifa", callback_data="home_page")
+    course_buttons.insert(button)
     return course_buttons
 
 
