@@ -2,6 +2,7 @@ from . import help
 from . import start
 from . import admin
 from . import cancel
+from . import home_page
 from . import register
 from . import send_question
 from . import suggests
