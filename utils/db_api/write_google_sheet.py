@@ -23,7 +23,7 @@ spreadsheet_service = build('sheets', 'v4', credentials=credentials)
 drive_service = build('drive', 'v3', credentials=credentials)
 
 
-def write_range(value: list) -> bool:
+async def write_range(value: list) -> bool:
     spreadsheet_id = SPREADSHEET_ID
     range_name = WRITE_RANGE
     value_input_option = 'USER_ENTERED'
