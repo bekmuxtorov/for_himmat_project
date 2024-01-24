@@ -130,3 +130,4 @@ dmypy.json
 .idea/*
 .env
 credentials.json
+.env.pusk1
