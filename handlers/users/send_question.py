@@ -1,7 +1,7 @@
 from aiogram import types
 from loader import dp, bot, db
 from aiogram.dispatcher import FSMContext
-from data.config import ADMINS
+from data.config import ADMINS, ADMIN_GROUP_ID
 
 from filters.is_privatechat import IsPrivateChat
 from states.sent_question import SendQuestionToTeacher
@@ -28,12 +28,20 @@ async def send_question(call: types.CallbackQuery, state: FSMContext):
     user = await db.select_user(telegram_id=call.from_user.id)
     full_name = user.get("full_name")
     username = user.get("username")
+    telegram_id = user.get("telegram_id")
+    phone_number = user.get("phone_number")
+    age = user.get("age")
+    gender = user.get("gender")
+
     question_data = await state.get_data()
     question_text = question_data.get("question_text")
     if username:
-        send_text = f"📝 Ustozga savol yo'llandi.\n\n<b>Kimdan:</b> {full_name}\n<b>Telegam username:</b> @{username}\n\n<i>{question_text}</i>"
-    for admin in ADMINS:
-        await bot.send_message(chat_id=admin, text=send_text)
+        send_text = f"📝 Ustozga savol yo'llandi.\n\n<b>Kimdan:</b> {full_name}\n<b>Telegam username:</b> @{username}\n<b>Yosh:</b> {age} yosh\n<b>Jins:</b> {gender}\n<b>Telefon raqam:</b> {phone_number}\n\n<i>{question_text}</i>"
+    else:
+        send_text = f"📝 Ustozga savol yo'llandi.\n\n<b>Kimdan:</b> {full_name}\n<b>Telegam ID:</b> {telegram_id}\n<b>Yosh:</b> {age} yosh\n<b>Jins:</b> {gender}\n<b>Telefon raqam:</b> {phone_number}\n\n<i>{question_text}</i>"
+
+    await bot.send_message(chat_id=ADMIN_GROUP_ID, text=send_text)
+
     await call.message.answer("✅ Savol muvaffaqiyatli yuborildi!", reply_markup=make_buttons(["Suhbatlar", "Ustozga savol yo'llash", "Dars uchun link olish", "Taklif va e'tirozlar", "Ijtimoiy tarmoq havolalar"], row_width=1))
     await call.answer(cache_time=60)
     await state.finish()
