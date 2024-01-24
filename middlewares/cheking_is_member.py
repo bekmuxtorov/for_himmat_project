@@ -16,10 +16,10 @@ class Asosiy_checking(BaseMiddleware):
             user_id = xabar.message.from_user.id
         elif xabar.callback_query:
             user_id = xabar.callback_query.from_user.id
+            chat_id = xabar.callback_query.message.chat.id
             status_message = True
         else:
             return
-
         dastlabki_holat = True
         must_member = {}
         hello_text = "Assalomu alekum, botga xush kelibsiz"
@@ -35,7 +35,7 @@ class Asosiy_checking(BaseMiddleware):
 
             if status_message:
                 first_text = f"📤Foydalanish uchun kanallarning barchasiga a'zo bo'lishingiz kerak!"
-                await bot.send_message(user_id, first_text, reply_markup=become_member_buttons(must_member))
+                await bot.send_message(chat_id, first_text, reply_markup=become_member_buttons(must_member))
             else:
                 await xabar.message.reply(first_text, reply_markup=become_member_buttons(must_member))
             raise CancelHandler()
