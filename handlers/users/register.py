@@ -3,6 +3,7 @@ from datetime import datetime as dt
 from aiogram import types
 from aiogram.dispatcher.filters.builtin import CommandStart
 from aiogram.dispatcher import FSMContext
+import pytz
 
 from loader import dp, db, bot
 from states.register import Register
@@ -64,7 +65,7 @@ async def register(message: types.Message, state: FSMContext):
     full_name = user_data.get("full_name")
     phone_number = user_data.get("phone_number")
     gender = user_data.get("gender")
-    create_at = dt.now().strftime("%H:%M, %m/%d/%Y")
+    create_at = dt.now(pytz.timezone('Asia/Tashkent')).strftime("%H:%M, %d/%m/%Y")
 
     try:
         await db.add_user(
