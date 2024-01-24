@@ -1,4 +1,3 @@
-from utils.db_api.write_google_sheet import write_range
 from datetime import datetime as dt
 from aiogram import types
 from aiogram.dispatcher.filters.builtin import CommandStart
@@ -8,6 +7,8 @@ import pytz
 from loader import dp, db, bot
 from states.register import Register
 from filters.is_privatechat import IsPrivateChat
+from utils.db_api.write_google_sheet import write_range
+from utils.db_api.set_username import set_username
 
 from keyboards.default.default_buttons import contact_request_button, make_buttons
 from keyboards.inline.buttons import course_button
@@ -77,6 +78,7 @@ async def register(message: types.Message, state: FSMContext):
             age=age
         )
         await message.answer(text="Siz muaffaqqiyatli ro'yhatdan o'tdingiz, \n\nQuyidagi tugmalardan birini tanglashingiz va guruhga qo'shilishingiz mumkin.", reply_markup=course_button(gender))
+        username = await set_username(username)
         await write_range([full_name, username, user_id,
                            phone_number, gender, age, create_at])
         await state.finish()
