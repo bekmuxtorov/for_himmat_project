@@ -19,7 +19,7 @@ async def bot_start(message: types.Message):
 
     if user:
         full_name = user.get("full_name")
-        await message.answer(f"Xurmatli {full_name}, marhamat o'zingizga kerakli guruhni tanlang: ", reply_markup=make_buttons(["Suhbatlar", "Ustozga savol yo'llash", "Dars uchun link olish", "Taklif va e'tirozlar", "Ijtimoiy tarmoq havolalar"], row_width=1))
+        await message.answer(f"Xurmatli {full_name}, marhamat o'zingizga kerakli bo'limni tanlang: ", reply_markup=make_buttons(["Suhbatlar", "Ustozga savol yo'llash", "Dars uchun link olish", "Taklif va e'tirozlar", "Ijtimoiy tarmoq havolalar"], row_width=1))
     else:
         await message.answer("Xush kelibsiz!\n\nBotdan foydalanish uchun quyidagi tugma yordamida ro'yhatdan o'ting!", reply_markup=make_buttons(["Ro'yhatdan o'tish"]))
 
@@ -28,6 +28,9 @@ async def bot_start(message: types.Message):
 async def is_member(call: types.CallbackQuery,):
     user_id = call.from_user.id
     await call.message.delete()
+    if call.message.chat.type in (types.ChatType.SUPERGROUP, types.ChatType.GROUP, types.ChatType.SUPER_GROUP):
+        await call.message.answer("💡 Guruhdan foydalanishingiz mumkin!")
+        return
     user = await db.select_user(telegram_id=user_id)
     if user:
         full_name = user.get("full_name")
