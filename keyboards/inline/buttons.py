@@ -18,9 +18,9 @@ def become_member_buttons(must_member: dict):
 
 
 COURSES = {
-    "Sog'lom ovqtalanish guruhi": "https://bekmuxtorov_uz.t.me",
-    "Millionerlar klubi": "https://bekmuxtorov_uz.t.me",
-    "Himmat 700+ o'smirlar guruhi (12-17 yosh)": "https://bekmuxtorov_uz.t.me"
+    "Sog'lom ovqtalanish guruhi": "https://t.me/togriovqatlanishklub",
+    "Millionerlar klubi": "https://t.me/millionerlar_klubi_kutish_guruhi",
+    # "Himmat 700+ o'smirlar guruhi (12-17 yosh)": "https://bekmuxtorov_uz.t.me"
 }
 
 SPECIAL_GROUPS = {
