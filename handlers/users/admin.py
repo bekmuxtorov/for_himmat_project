@@ -1,14 +1,14 @@
 import os
 from aiogram.types import InputFile
 from datetime import datetime
-import asyncio
 
 from aiogram import types
+import openpyxl
 
 from data.config import ADMINS, SPREADSHEET_ID
 from loader import dp, db, bot
 from filters.is_privatechat import IsPrivateChat
-import openpyxl
+from utils.db_api.read_google_sheet import get_talks_dict
 
 
 @dp.message_handler(IsPrivateChat(), text="/admin", user_id=ADMINS)
@@ -16,7 +16,8 @@ async def send_help_text(message: types.Message):
     content_text = "📝 Buyruqlar:"
     content_text += "\n\n<b>1. Buyruq:</b> /statistics\n<b>Tavsif:</b> Bot bo'yicha umumiy statistika ya'ni umumiy a'zolar soni, bir kunlik ro'yhatdan o'tgan foydalanuvchilar."
     content_text += "\n\n<b>2. Buyruq:</b> /excel\n<b>Tavsif:</b> Bot foydalanuvchilarning umumiy bazasini excel fayl ko'rinishida yuklab olish imkoniyati."
-    content_text += "\n\n<b>2. Buyruq:</b> /google_sheet\n<b>Tavsif:</b> Bot foydalanuvchilarning umumiy bazasini google sheet'da ko'rinishi imkoniyati. "
+    content_text += "\n\n<b>3. Buyruq:</b> /google_sheet\n<b>Tavsif:</b> Bot foydalanuvchilarning umumiy bazasini google sheet'da ko'rinishi imkoniyati. "
+    content_text += "\n\n<b>4. Buyruq:</b> /update_talks\n<b>Tavsif:</b> Suhbatlar bo'limidagi suhbatlarni yangilash imkoniyati."
     await message.answer(content_text)
 
 
@@ -63,3 +64,12 @@ async def send_excel(message: types.Message):
     text = "📝 Google sheet uchun link:"
     text += f"\n\n{sheet_url}"
     await message.answer(text)
+
+
+@dp.message_handler(IsPrivateChat(), text="/update_talks", chat_id=ADMINS)
+async def update_talk(message: types.Message):
+    results_dict = await get_talks_dict()
+    await db.delete_talks()
+    for title, links in results_dict.items():
+        await db.add_talks(title, links)
+    await message.answer(f"✅ Muaffaqiyatli suhbatlar bo'limi yangilandi.")
