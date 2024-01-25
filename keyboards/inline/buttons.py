@@ -50,3 +50,11 @@ confirmation_button.insert(InlineKeyboardButton(
     callback_data="yes_send", text="Ha, jo'natilsin."))
 confirmation_button.insert(InlineKeyboardButton(
     callback_data="no_send", text="Yo'q, bekor qilinsin."))
+
+
+def talk_buttons(titles: dict) -> InlineKeyboardMarkup:
+    talk_buttons = InlineKeyboardMarkup(row_width=1)
+    for id, title in titles.items():
+        button = InlineKeyboardButton(text=title, callback_data=f"talk_{id}")
+        talk_buttons.insert(button)
+    return talk_buttons
