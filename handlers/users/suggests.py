@@ -38,7 +38,7 @@ async def send_question(call: types.CallbackQuery, state: FSMContext):
     if username:
         send_text = f"💡 Taklif yo'llandi.\n\n<b>Kimdan:</b> {full_name}\n<b>Telegam username:</b> @{username}\n<b>Yosh:</b> {age} yosh\n<b>Jins:</b> {gender}\n<b>Telefon raqam:</b> {phone_number}\n\n<i>{question_text}</i>"
     else:
-        send_text = f"💡 Taklif yo'llandi.\n\n<b>Kimdan:</b> {full_name}\n<b>Telegam ID:</b> @{telegram_id}\n<b>Yosh:</b> {age} yosh\n<b>Jins:</b> {gender}\n<b>Telefon raqam:</b> {phone_number}\n\n<i>{question_text}</i>"
+        send_text = f"💡 Taklif yo'llandi.\n\n<b>Kimdan:</b> {full_name}\n<b>Telegam ID:</b> {telegram_id}\n<b>Yosh:</b> {age} yosh\n<b>Jins:</b> {gender}\n<b>Telefon raqam:</b> {phone_number}\n\n<i>{question_text}</i>"
 
     await bot.send_message(chat_id=ADMIN_GROUP_ID, text=send_text)
     await call.message.answer("✅ Taklif muvaffaqiyatli yuborildi!", reply_markup=make_buttons(["Suhbatlar", "Ustozga savol yo'llash", "Dars uchun link olish", "Taklif va e'tirozlar", "Ijtimoiy tarmoq havolalar"], row_width=1))
