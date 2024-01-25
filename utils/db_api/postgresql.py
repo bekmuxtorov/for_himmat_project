@@ -54,6 +54,17 @@ class Database:
         """
         await self.execute(sql, execute=True)
 
+    async def create_table_talks(self):
+        sql = """
+            CREATE TABLE IF NOT EXISTS talks (
+                id SERIAL PRIMARY KEY,
+                title VARCHAR(255) NOT NULL,
+                links TEXT[] NOT NULL,
+                updated_at TIMESTAMP NOT NULL DEFAULT NOW()
+            );
+        """
+        await self.execute(sql, execute=True)
+
     @staticmethod
     def format_args(sql, parameters: dict):
         sql += " AND ".join([
@@ -109,3 +120,30 @@ class Database:
 
     async def drop_users(self):
         await self.execute("DROP TABLE users", execute=True)
+
+    async def add_talks(self, title, links, ):
+        await self.create_table_talks()
+        sql = "INSERT INTO talks (title, links) VALUES($1, $2) returning *"
+        return await self.execute(sql, title, links, fetchrow=True)
+
+    async def get_titles(self):
+        sql = "SELECT * FROM talks;"
+        data = await self.execute(sql, fetch=True)
+        titles = {item[0]: item[1] for item in data}
+        return titles
+
+    async def get_links(self, **kwargs):
+        sql = "SELECT * FROM talks WHERE "
+        sql, parameters = self.format_args(sql, parameters=kwargs)
+        data = await self.execute(sql, *parameters, fetchrow=True)
+        return {
+            "title": data[1],
+            "links": data[2],
+            "updated_at": data[3]
+        } if data else None
+
+    async def delete_talks(self):
+        try:
+            await self.execute("DELETE FROM talks WHERE TRUE;", execute=True)
+        except Exception as e:
+            print(f"Error in delete_talks: {e}")
