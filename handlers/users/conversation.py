@@ -24,5 +24,6 @@ async def send_talk_link(call: types.CallbackQuery):
     text += f"\n⌚ <b>Yangilangan vaqti:</b> {updated_at}"
     links = talk_data.get("links")
     await call.message.answer(text=text, reply_markup=make_buttons(["❌ Bekor qilish"]))
-    for link in links:
-        await bot.send_audio(chat_id=chat_id, audio=link)
+    for idx, link in enumerate(links):
+        caption = f"{title} - {idx+1} suxbat"
+        await bot.send_audio(chat_id=chat_id, audio=link, caption=caption)
