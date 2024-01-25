@@ -36,5 +36,8 @@ async def get_talks_dict():
     results = await read_range()
     results_dict = {}
     for item in results[1:]:
-        results_dict[item[0]] = item[1].split(',')
+        try:
+            results_dict[item[0]] = item[1].split(',')
+        except IndexError as e:
+            pass
     return results_dict
