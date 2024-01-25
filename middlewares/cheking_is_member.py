@@ -17,9 +17,6 @@ class Asosiy_checking(BaseMiddleware):
         elif xabar.callback_query:
             user_id = xabar.callback_query.from_user.id
             chat_id = xabar.callback_query.message.chat.id
-            print('='*20)
-            print(f"{chat_id=}")
-            print('='*20)
             status_message = True
         else:
             return
