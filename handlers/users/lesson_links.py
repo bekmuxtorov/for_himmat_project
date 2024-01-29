@@ -9,4 +9,4 @@ from keyboards.inline.buttons import course_button
 async def bot_echo(message: types.Message):
     user = await db.select_user(telegram_id=message.from_user.id)
     gender = user.get("gender")
-    await message.answer("Quyidagi tugmalardan birini tanglashingiz va guruhga qo'shilishingiz mumkin.", reply_markup=course_button(gender))
+    await message.answer("Quyidagi guruhlarga qo'shilishingiz mumkin 😊", reply_markup=course_button(gender))
