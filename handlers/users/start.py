@@ -41,3 +41,10 @@ async def is_member(call: types.CallbackQuery,):
     else:
         await call.message.answer(text="Barcha kanallarga a'zo bo'ldingiz! \n\nRo'yatdan o'tish uchun quyidagi tugmani bosing.", reply_markup=make_buttons(["Ro'yhatdan o'tish"]))
         return
+
+
+@dp.callback_query_handler(text="million_course")
+async def million_course(call: types.CallbackQuery):
+    await call.message.delete()
+    text = "🔔 Hozircha Millionerlar klubiga qabul to'xtatilgan, qabul ochilishi bilan sizga xabar beramiz!"
+    await call.message.answer(text=text, reply_markup=make_buttons(["Suhbatlar", "Ustozga savol yo'llash", "Dars uchun link olish", "Taklif va e'tirozlar", "Ijtimoiy tarmoq havolalar"], row_width=1))
