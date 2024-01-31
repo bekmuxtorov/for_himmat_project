@@ -19,7 +19,7 @@ async def bot_start(message: types.Message):
 
     if user:
         full_name = user.get("full_name")
-        await message.answer(f"Xurmatli {full_name}, marhamat o'zingizga kerakli bo'limni tanlang: ", reply_markup=make_buttons(["Suhbatlar", "Ustozga savol yo'llash", "Dars uchun link olish", "Taklif va e'tirozlar", "Ijtimoiy tarmoq havolalar"], row_width=1))
+        await message.answer(f"Xurmatli {full_name}, marhamat o'zingizga kerakli bo'limni tanlang: ", reply_markup=make_buttons(["Barcha suhbatlar (Himmat 700+)", "Ustozga savol yo'llash", "Asosiy guruhlar uchun link olish", "Taklif va e'tirozlar", "Ijtimoiy tarmoq havolalar"], row_width=1))
     else:
         await message.answer("Xush kelibsiz!\n\nBotdan foydalanish uchun quyidagi tugma yordamida ro'yhatdan o'ting!", reply_markup=make_buttons(["Ro'yhatdan o'tish"]))
 
@@ -47,4 +47,4 @@ async def is_member(call: types.CallbackQuery,):
 async def million_course(call: types.CallbackQuery):
     await call.message.delete()
     text = "🔔 Hozircha Millionerlar klubiga qabul to'xtatilgan, qabul ochilishi bilan sizga xabar beramiz!"
-    await call.message.answer(text=text, reply_markup=make_buttons(["Suhbatlar", "Ustozga savol yo'llash", "Dars uchun link olish", "Taklif va e'tirozlar", "Ijtimoiy tarmoq havolalar"], row_width=1))
+    await call.message.answer(text=text, reply_markup=make_buttons(["Barcha suhbatlar (Himmat 700+)", "Ustozga savol yo'llash", "Asosiy guruhlar uchun link olish", "Taklif va e'tirozlar", "Ijtimoiy tarmoq havolalar"], row_width=1))

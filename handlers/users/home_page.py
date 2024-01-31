@@ -13,6 +13,6 @@ async def bot_echo(call: types.CallbackQuery, state: FSMContext = '*'):
     if not user:
         await call.message.answer("Xush kelibsiz!\n\nBotdan foydalanish uchun quyidagi tugma yordamida ro'yhatdan o'ting!", reply_markup=make_buttons(["Ro'yhatdan o'tish"]))
     else:
-        await call.message.answer("🏠 Bosh sahifa", reply_markup=make_buttons(["Suhbatlar", "Ustozga savol yo'llash", "Dars uchun link olish", "Taklif va e'tirozlar", "Ijtimoiy tarmoq havolalar"], row_width=1))
+        await call.message.answer("🏠 Bosh sahifa", reply_markup=make_buttons(["Barcha suhbatlar (Himmat 700+)", "Ustozga savol yo'llash", "Asosiy guruhlar uchun link olish", "Taklif va e'tirozlar", "Ijtimoiy tarmoq havolalar"], row_width=1))
     await state.finish()
     await state.reset_data()

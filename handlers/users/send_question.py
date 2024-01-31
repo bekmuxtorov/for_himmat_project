@@ -42,13 +42,13 @@ async def send_question(call: types.CallbackQuery, state: FSMContext):
 
     await bot.send_message(chat_id=ADMIN_GROUP_ID, text=send_text)
 
-    await call.message.answer("✅ Savol muvaffaqiyatli yuborildi!", reply_markup=make_buttons(["Suhbatlar", "Ustozga savol yo'llash", "Dars uchun link olish", "Taklif va e'tirozlar", "Ijtimoiy tarmoq havolalar"], row_width=1))
+    await call.message.answer("✅ Savol muvaffaqiyatli yuborildi!", reply_markup=make_buttons(["Barcha suhbatlar (Himmat 700+)", "Ustozga savol yo'llash", "Asosiy guruhlar uchun link olish", "Taklif va e'tirozlar", "Ijtimoiy tarmoq havolalar"], row_width=1))
     await call.answer(cache_time=60)
     await state.finish()
 
 
 @dp.callback_query_handler(text_contains="no_send", state=SendQuestionToTeacher.confirmation)
 async def send_question(call: types.CallbackQuery, state: FSMContext):
-    await call.message.answer("📝 Savol bekor qilindi!", reply_markup=make_buttons(["Suhbatlar", "Ustozga savol yo'llash", "Dars uchun link olish", "Taklif va e'tirozlar", "Ijtimoiy tarmoq havolalar"], row_width=1))
+    await call.message.answer("📝 Savol bekor qilindi!", reply_markup=make_buttons(["Barcha suhbatlar (Himmat 700+)", "Ustozga savol yo'llash", "Asosiy guruhlar uchun link olish", "Taklif va e'tirozlar", "Ijtimoiy tarmoq havolalar"], row_width=1))
     await call.answer(cache_time=60)
     await state.finish()

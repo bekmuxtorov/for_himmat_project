@@ -37,8 +37,13 @@ def course_button(gender: str) -> InlineKeyboardButton:
     button = InlineKeyboardButton(
         text="Millionerlar klubi", callback_data="million_course")
     course_buttons.insert(button)
-    button = InlineKeyboardButton(
-        text=f"Himmat 700+ xos guruhlari({gender}lar)", url=SPECIAL_GROUPS.get(gender))
+    if gender == "Erkak":
+        button = InlineKeyboardButton(
+            text=f"Himmat 700+({gender}lar+o'smirlar 12-17 yosh)", url=SPECIAL_GROUPS.get(gender))
+    else:
+        button = InlineKeyboardButton(
+            text=f"Himmat 700+ xos guruhlari({gender}lar)", url=SPECIAL_GROUPS.get(gender))
+
     course_buttons.insert(button)
 
     button = InlineKeyboardButton(

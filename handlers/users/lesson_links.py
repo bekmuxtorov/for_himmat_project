@@ -5,7 +5,7 @@ from filters.is_privatechat import IsPrivateChat
 from keyboards.inline.buttons import course_button
 
 
-@dp.message_handler(IsPrivateChat(), text="Dars uchun link olish")
+@dp.message_handler(IsPrivateChat(), text="Asosiy guruhlar uchun link olish")
 async def bot_echo(message: types.Message):
     user = await db.select_user(telegram_id=message.from_user.id)
     gender = user.get("gender")

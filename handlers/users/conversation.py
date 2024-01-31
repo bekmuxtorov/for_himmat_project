@@ -6,7 +6,7 @@ from keyboards.inline.buttons import talk_buttons
 from keyboards.default import make_buttons
 
 
-@dp.message_handler(IsPrivateChat(), text="Suhbatlar")
+@dp.message_handler(IsPrivateChat(), text="Barcha suhbatlar (Himmat 700+)")
 async def bot_echo(message: types.Message):
     titles = await db.get_titles()
     await message.answer("✅ Quyidan o'zingizga kerakli suhbatni tanglang:", reply_markup=talk_buttons(titles))
