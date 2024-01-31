@@ -17,7 +17,7 @@ async def send_help_text(message: types.Message):
     content_text += "\n\n<b>1. Buyruq:</b> /statistics\n<b>Tavsif:</b> Bot bo'yicha umumiy statistika ya'ni umumiy a'zolar soni, bir kunlik ro'yhatdan o'tgan foydalanuvchilar."
     content_text += "\n\n<b>2. Buyruq:</b> /excel\n<b>Tavsif:</b> Bot foydalanuvchilarning umumiy bazasini excel fayl ko'rinishida yuklab olish imkoniyati."
     content_text += "\n\n<b>3. Buyruq:</b> /google_sheet\n<b>Tavsif:</b> Bot foydalanuvchilarning umumiy bazasini google sheet'da ko'rinishi imkoniyati. "
-    content_text += "\n\n<b>4. Buyruq:</b> /update_talks\n<b>Tavsif:</b> Suhbatlar bo'limidagi suhbatlarni yangilash imkoniyati."
+    content_text += "\n\n<b>4. Buyruq:</b> /update_talks\n<b>Tavsif:</b> Suhbatlar bo'limidagi suhbatlarni yangilash imkoniyati.(Tugmadan foydalanish uchun qo'llanma: https://teletype.in/@muxtorov4101/fot_himmat_project )"
     await message.answer(content_text)
 
 
