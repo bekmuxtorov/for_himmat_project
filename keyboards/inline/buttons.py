@@ -65,3 +65,6 @@ def talk_buttons(titles: dict) -> InlineKeyboardMarkup:
         button = InlineKeyboardButton(text=title, callback_data=f"talk_{id}")
         talk_buttons.insert(button)
     return talk_buttons
+
+
+

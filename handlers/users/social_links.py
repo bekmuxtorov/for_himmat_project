@@ -4,7 +4,7 @@ from loader import dp
 from filters.is_privatechat import IsPrivateChat
 
 
-@dp.message_handler(IsPrivateChat(), text="Ijtimoiy tarmoq havolalar")
+@dp.message_handler(IsPrivateChat(), text="Himmat 700+ Ijtimoiy tarmoqdagi havolalar💻🔆")
 async def bot_echo(message: types.Message):
     text = "<b>💡 Ijrimoiy tarmoqlardagi manzillarimiz:</b>\n\n"
     text += "1. Telegram: <a href='https://t.me/Zufar_Domla'>@Zufar_Domla</a>"

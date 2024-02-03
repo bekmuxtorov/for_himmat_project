@@ -129,7 +129,7 @@ class Database:
     async def get_titles(self):
         sql = "SELECT * FROM talks;"
         data = await self.execute(sql, fetch=True)
-        titles = {item[0]: item[1] for item in data}
+        titles = {item[0]: item[1].strip() for item in data}
         return titles
 
     async def get_links(self, **kwargs):

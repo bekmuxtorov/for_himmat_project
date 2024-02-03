@@ -7,7 +7,7 @@ from data.config import SPREADSHEET_ID
 # Spreadsheet id
 
 # Sheet Name and Range to Read
-READ_RANGE = "Suhbatlar!A1:B5"
+READ_RANGE = "Suhbatlar!A1:B10"
 
 # The boundary of script
 SCOPES = [

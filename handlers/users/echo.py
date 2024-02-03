@@ -2,7 +2,7 @@ from aiogram import types
 from loader import dp, db
 
 from filters.is_privatechat import IsPrivateChat
-from keyboards.default.default_buttons import make_buttons
+from keyboards.default.default_buttons import make_buttons, build_menu_buttons
 
 # Echo bot
 

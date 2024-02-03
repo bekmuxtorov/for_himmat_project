@@ -6,10 +6,10 @@ from data.config import ADMINS, ADMIN_GROUP_ID
 from filters.is_privatechat import IsPrivateChat
 from states.sent_question import SendQuestionToTeacher
 from keyboards.inline.buttons import confirmation_button
-from keyboards.default.default_buttons import make_buttons
+from keyboards.default.default_buttons import make_buttons, build_menu_buttons
 
 
-@dp.message_handler(IsPrivateChat(), text="Ustozga savol yo'llash")
+@dp.message_handler(IsPrivateChat(), text="📝 Ustozga savol yo'llash 📝")
 async def bot_echo(message: types.Message):
     await message.answer("✏️ Savolingizni aniq ko'rinishda yozib jo'natishingiz mumkin:", reply_markup=make_buttons(["❌ Bekor qilish"]))
     await SendQuestionToTeacher.question.set()
@@ -42,13 +42,13 @@ async def send_question(call: types.CallbackQuery, state: FSMContext):
 
     await bot.send_message(chat_id=ADMIN_GROUP_ID, text=send_text)
 
-    await call.message.answer("✅ Savol muvaffaqiyatli yuborildi!", reply_markup=make_buttons(["Barcha suhbatlar (Himmat 700+)", "Ustozga savol yo'llash", "Asosiy guruhlar uchun link olish", "Taklif va e'tirozlar", "Ijtimoiy tarmoq havolalar"], row_width=1))
+    await call.message.answer("✅ Savol muvaffaqiyatli yuborildi!", reply_markup=build_menu_buttons)
     await call.answer(cache_time=60)
     await state.finish()
 
 
 @dp.callback_query_handler(text_contains="no_send", state=SendQuestionToTeacher.confirmation)
 async def send_question(call: types.CallbackQuery, state: FSMContext):
-    await call.message.answer("📝 Savol bekor qilindi!", reply_markup=make_buttons(["Barcha suhbatlar (Himmat 700+)", "Ustozga savol yo'llash", "Asosiy guruhlar uchun link olish", "Taklif va e'tirozlar", "Ijtimoiy tarmoq havolalar"], row_width=1))
+    await call.message.answer("📝 Savol bekor qilindi!", reply_markup=build_menu_buttons)
     await call.answer(cache_time=60)
     await state.finish()
