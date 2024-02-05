@@ -2,13 +2,16 @@ from aiogram import types
 from loader import dp, db, bot
 
 from filters.is_privatechat import IsPrivateChat
-from keyboards.inline.buttons import talk_buttons
 from keyboards.default import make_buttons, build_talk_buttons
 from states.conversations import ConversationState
+from aiogram.dispatcher import FSMContext
 
 
+@dp.message_handler(IsPrivateChat(), text="🔙 Ortga qaytish", state='*')
 @dp.message_handler(IsPrivateChat(), text="📚 Barcha suxbatlar(Himmat 700+) 📚")
-async def bot_echo(message: types.Message):
+async def bot_echo(message: types.Message, state: FSMContext):
+    await state.finish()
+    await state.reset_data()
     titles = await db.get_titles()
     await message.answer("✅ Quyidan o'zingizga kerakli suhbatni tanglang:", reply_markup=build_talk_buttons(titles))
     await ConversationState.conversations.set()
@@ -27,12 +30,12 @@ async def send_talk_link(message: types.Message, state):
     text = f"💡 <b>Suhbat nomi:</b> {title}"
     text += f"\n⌚ <b>Yangilangan vaqti:</b> {updated_at}"
     links = talk_data.get("links")
-    await message.answer(text=text, reply_markup=make_buttons(["🏠 Bosh sahifa"]))
+    await message.answer(text=text, reply_markup=make_buttons(["🔙 Ortga qaytish"]))
     for idx, link in enumerate(links):
         caption = f"{title} - {idx+1} suxbat"
         await bot.send_audio(chat_id=chat_id, audio=link, caption=caption)
-    await message.answer(text=f"✅ {title} bo'yicha barcha suhbatlar yuborildi.")
     await state.finish()
+    await message.answer(text=f"✅ {title} bo'yicha barcha suhbatlar yuborildi.", reply_markup=make_buttons(["🔙 Ortga qaytish"]))
 
 
 # @dp.callback_query_handler(text_contains="talk_")
