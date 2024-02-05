@@ -3,6 +3,8 @@ from aiogram.types import InputFile
 from datetime import datetime
 
 from aiogram import types
+from aiogram.dispatcher import FSMContext
+
 import openpyxl
 
 from data.config import ADMINS, SPREADSHEET_ID
@@ -11,8 +13,9 @@ from filters.is_privatechat import IsPrivateChat
 from utils.db_api.read_google_sheet import get_talks_dict
 
 
-@dp.message_handler(IsPrivateChat(), text="/admin", user_id=ADMINS)
-async def send_help_text(message: types.Message):
+@dp.message_handler(IsPrivateChat(), text="/admin", user_id=ADMINS, state='*')
+async def send_help_text(message: types.Message, state: FSMContext):
+    await state.finish()
     content_text = "📝 Buyruqlar:"
     content_text += "\n\n<b>1. Buyruq:</b> /statistics\n<b>Tavsif:</b> Bot bo'yicha umumiy statistika ya'ni umumiy a'zolar soni, bir kunlik ro'yhatdan o'tgan foydalanuvchilar."
     content_text += "\n\n<b>2. Buyruq:</b> /excel\n<b>Tavsif:</b> Bot foydalanuvchilarning umumiy bazasini excel fayl ko'rinishida yuklab olish imkoniyati."
