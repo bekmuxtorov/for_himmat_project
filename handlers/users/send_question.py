@@ -1,3 +1,4 @@
+from filters.is_privatechat import IsPrivateChatForCallback
 from aiogram import types
 from loader import dp, bot, db
 from aiogram.dispatcher import FSMContext
@@ -23,7 +24,7 @@ async def bot_echo(message: types.Message, state: FSMContext):
     await SendQuestionToTeacher.confirmation.set()
 
 
-@dp.callback_query_handler(text_contains="yes_send", state=SendQuestionToTeacher.confirmation)
+@dp.callback_query_handler(IsPrivateChatForCallback(), text_contains="yes_send", state=SendQuestionToTeacher.confirmation)
 async def send_question(call: types.CallbackQuery, state: FSMContext):
     user = await db.select_user(telegram_id=call.from_user.id)
     full_name = user.get("full_name")
@@ -47,7 +48,7 @@ async def send_question(call: types.CallbackQuery, state: FSMContext):
     await state.finish()
 
 
-@dp.callback_query_handler(text_contains="no_send", state=SendQuestionToTeacher.confirmation)
+@dp.callback_query_handler(IsPrivateChatForCallback(), text_contains="no_send", state=SendQuestionToTeacher.confirmation)
 async def send_question(call: types.CallbackQuery, state: FSMContext):
     await call.message.answer("📝 Savol bekor qilindi!", reply_markup=build_menu_buttons)
     await call.answer(cache_time=60)

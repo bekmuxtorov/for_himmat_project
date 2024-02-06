@@ -2,11 +2,12 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 
 from loader import dp, db
+from filters.is_privatechat import IsPrivateChatForCallback
 from keyboards.default.default_buttons import make_buttons, build_menu_buttons
 
 
 # Echo bot
-@dp.callback_query_handler(text_contains="home_page", state='*')
+@dp.callback_query_handler(IsPrivateChatForCallback(), text_contains="home_page", state='*')
 async def bot_echo(call: types.CallbackQuery, state: FSMContext = '*'):
     user_id = call.from_user.id
     user = await db.select_user(telegram_id=user_id)

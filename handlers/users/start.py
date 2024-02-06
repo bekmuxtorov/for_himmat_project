@@ -6,7 +6,7 @@ from aiogram.dispatcher import FSMContext
 from loader import dp, db, bot
 from data.config import ADMINS, CHANNELS
 from states.register import Register
-from filters.is_privatechat import IsPrivateChat
+from filters.is_privatechat import IsPrivateChat, IsPrivateChatForCallback
 
 from keyboards.default.default_buttons import make_buttons, build_menu_buttons
 from keyboards.inline.buttons import course_button
@@ -24,7 +24,7 @@ async def bot_start(message: types.Message):
         await message.answer("Xush kelibsiz!\n\nBotdan foydalanish uchun quyidagi tugma yordamida ro'yhatdan o'ting!", reply_markup=make_buttons(["Ro'yhatdan o'tish"]))
 
 
-@dp.callback_query_handler(text_contains="check_button")
+@dp.callback_query_handler(IsPrivateChatForCallback(), text_contains="check_button")
 async def is_member(call: types.CallbackQuery,):
     user_id = call.from_user.id
     await call.message.delete()
@@ -43,7 +43,7 @@ async def is_member(call: types.CallbackQuery,):
         return
 
 
-@dp.callback_query_handler(text="million_course")
+@dp.callback_query_handler(IsPrivateChatForCallback(), text="million_course")
 async def million_course(call: types.CallbackQuery):
     await call.message.delete()
     text = "🔔 Hozircha Millionerlar klubiga qabul to'xtatilgan, qabul ochilishi bilan sizga xabar beramiz!"
