@@ -1,14 +1,10 @@
-import asyncpg
 from aiogram import types
 from aiogram.dispatcher.filters.builtin import CommandStart
-from aiogram.dispatcher import FSMContext
 
-from loader import dp, db, bot
-from data.config import ADMINS, CHANNELS
-from states.register import Register
+from loader import dp, db
 from filters.is_privatechat import IsPrivateChat, IsPrivateChatForCallback
 
-from keyboards.default.default_buttons import make_buttons, build_menu_buttons
+from keyboards.default.default_buttons import make_buttons, build_menu_buttons, not_registered_for_menu_buttons
 from keyboards.inline.buttons import course_button
 
 
@@ -21,7 +17,17 @@ async def bot_start(message: types.Message):
         full_name = user.get("full_name")
         await message.answer(f"Xurmatli {full_name}, marhamat o'zingizga kerakli bo'limni tanlang: ", reply_markup=build_menu_buttons)
     else:
-        await message.answer("Xush kelibsiz!\n\nBotdan foydalanish uchun quyidagi tugma yordamida ro'yhatdan o'ting!", reply_markup=make_buttons(["Ro'yhatdan o'tish"]))
+        await message.answer("✅ Xush kelibsiz!\n\n", reply_markup=not_registered_for_menu_buttons)
+
+@dp.message_handler(IsPrivateChat(), text="💡 Himmat 700+ loyihasi 💡")
+async def bot_start(message: types.Message):
+    user = await db.select_user(telegram_id=message.from_user.id)
+
+    if user:
+        full_name = user.get("full_name")
+        await message.answer(f"Xurmatli {full_name}, marhamat o'zingizga kerakli bo'limni tanlang: ", reply_markup=build_menu_buttons)
+    else:
+        await message.answer("Xush kelibsiz!\n\nLoyihada qatnashish uchun quyidagi tugma yordamida ro'yhatdan o'ting!", reply_markup=make_buttons(["Ro'yhatdan o'tish"]))
 
 
 @dp.callback_query_handler(IsPrivateChatForCallback(), text_contains="check_button")
