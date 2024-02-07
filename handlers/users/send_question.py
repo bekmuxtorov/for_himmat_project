@@ -65,7 +65,7 @@ async def send_question(call: types.CallbackQuery, state: FSMContext):
 
 @dp.callback_query_handler(IsPrivateChatForCallback(), text_contains="no_send", state=SendQuestionToTeacher.confirmation)
 async def send_question(call: types.CallbackQuery, state: FSMContext):
-    user = await db.select_user(telegram_id=call.message.from_user.id)
+    user = await db.select_user(telegram_id=call.from_user.id)
     text = "📝 Savol bekor qilindi!"
     await call.message.delete()
 
