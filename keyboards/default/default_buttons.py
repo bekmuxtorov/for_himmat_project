@@ -35,3 +35,6 @@ def build_talk_buttons(titles: dict) -> ReplyKeyboardMarkup:
 
 build_menu_buttons = make_buttons(["📚 Barcha suxbatlar(Himmat 700+) 📚", "📝 Ustozga savol yo'llash 📝",
                                   "📍(Himmat 700+ loyihalari havolasini olish)📍", "Taklif va e'tirozlar✍️", "Himmat 700+ Ijtimoiy tarmoqdagi havolalar💻🔆"], row_width=1)
+
+
+not_registered_for_menu_buttons = make_buttons(["📚 Barcha suxbatlar(Himmat 700+) 📚", "📝 Ustozga savol yo'llash 📝", "💡 Himmat 700+ loyihasi 💡"])

@@ -1,1 +1,1 @@
-from .default_buttons import contact_request_button, make_buttons, build_talk_buttons, build_menu_buttons
+from .default_buttons import contact_request_button, make_buttons, build_talk_buttons, build_menu_buttons, not_registered_for_menu_buttons
