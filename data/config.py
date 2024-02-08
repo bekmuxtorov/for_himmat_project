@@ -21,3 +21,4 @@ SPREADSHEET_ID = env.str("SPREADSHEET_ID")
 
 FOR_MAN = env.str("FOR_MAN")
 FOR_WOMAN = env.str("FOR_WOMAN")
+FOR_TEENAGER = env.str("FOR_TEENAGER")

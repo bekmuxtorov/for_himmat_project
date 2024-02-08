@@ -1,7 +1,7 @@
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from loader import bot
 
-from data.config import FOR_MAN, FOR_WOMAN
+from data.config import FOR_MAN, FOR_WOMAN, FOR_TEENAGER
 
 
 def become_member_buttons(must_member: dict):
@@ -24,8 +24,9 @@ COURSES = {
 }
 
 SPECIAL_GROUPS = {
-    "Erkak": FOR_MAN,
-    "Ayol": FOR_WOMAN,
+    "Erkaklar 👳": FOR_MAN,
+    "O'smir o'g'il bolalar🙋": FOR_TEENAGER,
+    "Ayollar🧕": FOR_WOMAN
 }
 
 
@@ -37,14 +38,11 @@ def course_button(gender: str) -> InlineKeyboardButton:
     button = InlineKeyboardButton(
         text="Millionerlar klubi", callback_data="million_course")
     course_buttons.insert(button)
-    if gender == "Erkak":
-        button = InlineKeyboardButton(
-            text=f"Himmat 700+({gender}lar+o'smirlar 12-17 yosh)", url=SPECIAL_GROUPS.get(gender))
-    else:
-        button = InlineKeyboardButton(
-            text=f"Himmat 700+ xos guruhlari({gender}lar)", url=SPECIAL_GROUPS.get(gender))
 
-    course_buttons.insert(button)
+    for title, link in SPECIAL_GROUPS.items():
+        button = InlineKeyboardButton(
+            text=f"Himmat 700+ xos guruhlari({title})", url=link)
+        course_buttons.insert(button)
 
     button = InlineKeyboardButton(
         text="🏠 Bosh sahifa", callback_data="home_page")
@@ -65,6 +63,3 @@ def talk_buttons(titles: dict) -> InlineKeyboardMarkup:
         button = InlineKeyboardButton(text=title, callback_data=f"talk_{id}")
         talk_buttons.insert(button)
     return talk_buttons
-
-
-
