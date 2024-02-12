@@ -1,23 +1,31 @@
 from aiogram import types
 from aiogram.dispatcher.filters.builtin import CommandStart
+from aiogram.utils.deep_linking import decode_payload
+from aiogram.dispatcher import FSMContext
 
 from loader import dp, db
 from filters.is_privatechat import IsPrivateChat, IsPrivateChatForCallback
 
+from states.sent_question import AnswerToUser
 from keyboards.default.default_buttons import make_buttons, build_menu_buttons, not_registered_for_menu_buttons
 from keyboards.inline.buttons import course_button
+from .send_answer import writing_answer
 
 
-@dp.message_handler(IsPrivateChat(), CommandStart())
-async def bot_start(message: types.Message):
+@dp.message_handler(CommandStart())
+async def bot_start(message: types.Message, state: FSMContext):
+    if not message.get_args():
+        user = await db.select_user(telegram_id=message.from_user.id)
+        if user:
+            full_name = user.get("full_name")
+            await message.answer(f"Xurmatli {full_name}, marhamat o'zingizga kerakli bo'limni tanlang: ", reply_markup=build_menu_buttons)
+        else:
+            await message.answer("✅ Xush kelibsiz!\n\n", reply_markup=not_registered_for_menu_buttons)
 
-    user = await db.select_user(telegram_id=message.from_user.id)
-
-    if user:
-        full_name = user.get("full_name")
-        await message.answer(f"Xurmatli {full_name}, marhamat o'zingizga kerakli bo'limni tanlang: ", reply_markup=build_menu_buttons)
     else:
-        await message.answer("✅ Xush kelibsiz!\n\n", reply_markup=not_registered_for_menu_buttons)
+        payload = decode_payload(message.get_args())
+        await writing_answer(message=message, payload=payload, state=state)
+
 
 @dp.message_handler(IsPrivateChat(), text="💡 Himmat 700+ loyihasi 💡")
 async def bot_start(message: types.Message):
