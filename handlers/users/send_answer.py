@@ -5,8 +5,8 @@ from aiogram.dispatcher import FSMContext
 from data.config import ADMIN_GROUP_ID
 from states.sent_question import AnswerToUser
 from keyboards.inline.buttons import confirmation_button
-from keyboards.default.default_buttons import make_buttons
-from filters.is_privatechat import IsPrivateChat
+from keyboards.default.default_buttons import make_buttons, build_menu_buttons
+from filters.is_privatechat import IsPrivateChat, IsPrivateChatForCallback
 from utils.db_api.build_message_group import build_message_group
 
 
@@ -25,7 +25,7 @@ async def writing_answer(message: types.Message, payload: str, state: FSMContext
     await AnswerToUser.answer.set()
 
 
-@dp.message_handler(state=AnswerToUser.answer)
+@dp.message_handler(IsPrivateChat(), state=AnswerToUser.answer)
 async def reply_question(message: types.Message, state: FSMContext):
     data = await state.get_data()
     old_message_id = data.get("message_id")
@@ -40,7 +40,7 @@ async def reply_question(message: types.Message, state: FSMContext):
     await AnswerToUser.confirmation.set()
 
 
-@dp.callback_query_handler(text_contains="yes_send", state=AnswerToUser.confirmation)
+@dp.callback_query_handler(IsPrivateChatForCallback(), text_contains="yes_send", state=AnswerToUser.confirmation)
 async def send_question(call: types.CallbackQuery, state: FSMContext):
     await call.message.delete()
     answer_details = await state.get_data()
@@ -60,16 +60,16 @@ async def send_question(call: types.CallbackQuery, state: FSMContext):
     await db.update_question_answer(answer=answer_text, question_id=int(question_id))
     await bot.send_message(chat_id=question_sender_id, text=text)
     await bot.send_message(chat_id=ADMIN_GROUP_ID, text=text)
-    await call.message.answer(text="✅ Javob muvaffaqiyatli yuborildi!")
+    await call.message.answer(text="✅ Javob muvaffaqiyatli yuborildi!", reply_markup=build_menu_buttons)
     await call.answer(cache_time=60)
     await state.finish()
     await state.reset_data()
 
 
-@dp.callback_query_handler(text_contains="no_send", state=AnswerToUser.confirmation)
+@dp.callback_query_handler(IsPrivateChatForCallback(), text_contains="no_send", state=AnswerToUser.confirmation)
 async def send_question(call: types.CallbackQuery, state: FSMContext):
     await call.message.delete()
-    await call.message.answer(text="📝 Jo'natish bekor qilindi!")
+    await call.message.answer(text="📝 Jo'natish bekor qilindi!", reply_markup=build_menu_buttons)
     await call.answer(cache_time=60)
     await state.finish()
     await state.reset_data()
