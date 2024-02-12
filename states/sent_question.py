@@ -9,3 +9,8 @@ class SendQuestionToTeacher(StatesGroup):
 class SendQuestionToAdmin(StatesGroup):
     question = State()
     confirmation = State()
+
+
+class AnswerToUser(StatesGroup):
+    answer = State()
+    confirmation = State()

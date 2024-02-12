@@ -5,6 +5,7 @@ from . import cancel
 from . import home_page
 from . import register
 from . import send_question
+from . import send_answer
 from . import suggests
 from . import social_links
 from . import lesson_links
