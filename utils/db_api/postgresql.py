@@ -65,6 +65,18 @@ class Database:
         """
         await self.execute(sql, execute=True)
 
+    async def create_table_questions(self):
+        sql = """
+            CREATE TABLE IF NOT EXISTS questions (
+                id SERIAL PRIMARY KEY,
+                sender_user_id BIGINT NOT NULL,
+                body TEXT NOT NULL,
+                answer TEXT NULL,
+                created_at TIMESTAMP NOT NULL DEFAULT NOW()
+            )
+        """
+        await self.execute(sql, execute=True)
+
     @staticmethod
     def format_args(sql, parameters: dict):
         sql += " AND ".join([
@@ -72,6 +84,28 @@ class Database:
                                                           start=1)
         ])
         return sql, tuple(parameters.values())
+
+    async def add_question(self, sender_user_id, body):
+        sql = "INSERT INTO questions (sender_user_id, body) VALUES($1, $2) returning *"
+        data = await self.execute(sql, sender_user_id, body, fetchrow=True)
+        return data[0] if data else None
+
+    async def select_question(self, **kwargs):
+        sql = "SELECT * FROM questions WHERE "
+        sql, parameters = self.format_args(sql, parameters=kwargs)
+        data = await self.execute(sql, *parameters, fetchrow=True)
+
+        return {
+            "id": data[0],
+            "sender_user_id": data[1],
+            "body": data[2],
+            "answer": data[3],
+            "created_at": data[4],
+        } if data else None
+
+    async def update_question_answer(self, answer, question_id):
+        sql = "UPDATE questions SET answer=$1 WHERE id=$2"
+        return await self.execute(sql, answer, question_id, execute=True)
 
     async def add_user(self, full_name, username, telegram_id, phone_number, gender, age):
         sql = "INSERT INTO users (full_name, username, telegram_id, phone_number, gender, age) VALUES($1, $2, $3, $4, $5, $6) returning *"
