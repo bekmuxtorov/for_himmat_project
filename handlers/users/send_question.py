@@ -5,14 +5,15 @@ from aiogram.dispatcher import FSMContext
 from data.config import ADMINS, ADMIN_GROUP_ID
 
 from filters.is_privatechat import IsPrivateChat
-from states.sent_question import SendQuestionToTeacher
-from keyboards.inline.buttons import confirmation_button
+from states.sent_question import SendQuestionToTeacher, AnswerToUser
+from keyboards.inline.buttons import confirmation_button, reply_buttons
 from keyboards.default.default_buttons import make_buttons, build_menu_buttons, not_registered_for_menu_buttons
+from utils.db_api.build_message_group import build_message_group
 
 
 @dp.message_handler(IsPrivateChat(), text="📝 Ustozga savol yo'llash 📝")
 async def bot_echo(message: types.Message):
-    await message.answer("✏️ Savolingizni aniq ko'rinishda yozib jo'natishingiz mumkin:", reply_markup=make_buttons(["❌ Bekor qilish"]))
+    await message.answer("✏️ Savol jo'natishingiz mumkin:", reply_markup=make_buttons(["❌ Bekor qilish"]))
     await SendQuestionToTeacher.question.set()
 
 
@@ -30,28 +31,9 @@ async def send_question(call: types.CallbackQuery, state: FSMContext):
     question_text = question_data.get("question_text")
     await call.message.delete()
     user = await db.select_user(telegram_id=call.from_user.id)
-    is_registered = False
-    username = call.from_user.username
-    telegram_id = call.from_user.id
-    if user:
-        is_registered = True
-        full_name = user.get("full_name")
-        phone_number = user.get("phone_number")
-        age = user.get("age")
-        gender = user.get("gender")
-        if username:
-            send_text = f"📝 Ustozga savol yo'llandi.\n\n<b>Kimdan:</b> {full_name}\n<b>Telegam username:</b> @{username}\n<b>Yosh:</b> {age} yosh\n<b>Jins:</b> {gender}\n<b>Telefon raqam:</b> {phone_number}\n\n<i>{question_text}</i>"
-        else:
-            send_text = f"📝 Ustozga savol yo'llandi.\n\n<b>Kimdan:</b> {full_name}\n<b>Telegam ID:</b> {telegram_id}\n<b>Yosh:</b> {age} yosh\n<b>Jins:</b> {gender}\n<b>Telefon raqam:</b> {phone_number}\n\n<i>{question_text}</i>"
-
-    else:
-        full_name = call.from_user.full_name
-        if username:
-            send_text = f"📝 Ustozga savol yo'llandi.\n\n<b>Kimdan:</b> {full_name}\n<b>Telegam username:</b> @{username}\n\n<i>{question_text}</i>"
-        else:
-            send_text = f"📝 Ustozga savol yo'llandi.\n\n<b>Kimdan:</b> {full_name}\n<b>Telegam ID:</b> {telegram_id}\n\n<i>{question_text}</i>"
-
-    await bot.send_message(chat_id=ADMIN_GROUP_ID, text=send_text)
+    is_registered, send_text = await build_message_group(message=call, user=user, question_text=question_text)
+    question_id = await db.add_question(call.from_user.id, question_text)
+    await bot.send_message(chat_id=ADMIN_GROUP_ID, text=send_text, reply_markup=await reply_buttons(question_id))
 
     text = "✅ Savol muvaffaqiyatli yuborildi!"
     if is_registered:
