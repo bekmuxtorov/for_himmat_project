@@ -1,7 +1,7 @@
 from aiogram import types
 from loader import dp, bot, db
 from aiogram.dispatcher import FSMContext
-from data.config import ADMINS, ADMIN_GROUP_ID
+from data.config import ADMIN_GROUP_ID
 
 from filters.is_privatechat import IsPrivateChat, IsPrivateChatForCallback
 from states.sent_question import SendQuestionToAdmin
@@ -23,7 +23,7 @@ async def bot_echo(message: types.Message, state: FSMContext):
     await SendQuestionToAdmin.confirmation.set()
 
 
-@dp.callback_query_handler(IsPrivateChatForCallback(),text_contains="yes_send", state=SendQuestionToAdmin.confirmation)
+@dp.callback_query_handler(IsPrivateChatForCallback(), text_contains="yes_send", state=SendQuestionToAdmin.confirmation)
 async def send_question(call: types.CallbackQuery, state: FSMContext):
     user = await db.select_user(telegram_id=call.from_user.id)
     full_name = user.get("full_name")
@@ -46,7 +46,7 @@ async def send_question(call: types.CallbackQuery, state: FSMContext):
     await state.finish()
 
 
-@dp.callback_query_handler(IsPrivateChatForCallback(),text_contains="no_send", state=SendQuestionToAdmin.confirmation)
+@dp.callback_query_handler(IsPrivateChatForCallback(), text_contains="no_send", state=SendQuestionToAdmin.confirmation)
 async def send_question(call: types.CallbackQuery, state: FSMContext):
     await call.message.answer("📝 Taklif bekor qilindi!", reply_markup=build_menu_buttons)
     await call.answer(cache_time=60)
