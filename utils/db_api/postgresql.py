@@ -72,7 +72,8 @@ class Database:
                 sender_user_id BIGINT NOT NULL,
                 body TEXT NOT NULL,
                 answer TEXT NULL,
-                created_at TIMESTAMP NOT NULL DEFAULT NOW()
+                created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+                for_who VARCHAR(16) NULL  
             )
         """
         await self.execute(sql, execute=True)
@@ -85,9 +86,9 @@ class Database:
         ])
         return sql, tuple(parameters.values())
 
-    async def add_question(self, sender_user_id, body):
-        sql = "INSERT INTO questions (sender_user_id, body) VALUES($1, $2) returning *"
-        data = await self.execute(sql, sender_user_id, body, fetchrow=True)
+    async def add_question(self, for_who, sender_user_id, body):
+        sql = "INSERT INTO questions (for_who, sender_user_id, body) VALUES($1, $2, $3) returning *"
+        data = await self.execute(sql, for_who, sender_user_id, body, fetchrow=True)
         return data[0] if data else None
 
     async def select_question(self, **kwargs):
@@ -101,6 +102,7 @@ class Database:
             "body": data[2],
             "answer": data[3],
             "created_at": data[4],
+            "for_who": data[5]
         } if data else None
 
     async def update_question_answer(self, answer, question_id):
