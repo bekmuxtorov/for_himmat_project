@@ -5,13 +5,13 @@ from data.config import ADMIN_GROUP_ID
 
 from filters.is_privatechat import IsPrivateChat, IsPrivateChatForCallback
 from states.sent_question import SendQuestionToAdmin
-from keyboards.inline.buttons import confirmation_button
+from keyboards.inline.buttons import confirmation_button, reply_buttons
 from keyboards.default.default_buttons import make_buttons, build_menu_buttons
 
 
 @dp.message_handler(IsPrivateChat(), text="Taklif va e'tirozlar✍️")
 async def bot_echo(message: types.Message):
-    await message.answer("✏️ Loyihalarimiz bo'yicha taklif va e'tirozlaringizni aniq ko'rinishda yozib jo'natishingiz mumkin:", reply_markup=make_buttons(["❌ Bekor qilish"]))
+    await message.answer("✏️ Loyihalarimiz bo'yicha taklif va e'tirozlaringizni yozib jo'natishingiz mumkin:", reply_markup=make_buttons(["❌ Bekor qilish"]))
     await SendQuestionToAdmin.question.set()
 
 
@@ -40,7 +40,8 @@ async def send_question(call: types.CallbackQuery, state: FSMContext):
     else:
         send_text = f"💡 Taklif yo'llandi.\n\n<b>Kimdan:</b> {full_name}\n<b>Telegam ID:</b> {telegram_id}\n<b>Yosh:</b> {age} yosh\n<b>Jins:</b> {gender}\n<b>Telefon raqam:</b> {phone_number}\n\n<i>{question_text}</i>"
 
-    await bot.send_message(chat_id=ADMIN_GROUP_ID, text=send_text)
+    question_id = await db.add_question(for_who="for_admin",sender_user_id=call.from_user.id, body=question_text)
+    await bot.send_message(chat_id=ADMIN_GROUP_ID, text=send_text, reply_markup=await reply_buttons(question_id))
     await call.message.answer("✅ Taklif muvaffaqiyatli yuborildi!", reply_markup=build_menu_buttons)
     await call.answer(cache_time=60)
     await state.finish()
