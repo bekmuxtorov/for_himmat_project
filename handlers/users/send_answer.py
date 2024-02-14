@@ -1,3 +1,4 @@
+from datetime import timedelta
 from aiogram import types
 from loader import dp, bot, db
 from aiogram.dispatcher import FSMContext
@@ -51,7 +52,8 @@ async def send_question(call: types.CallbackQuery, state: FSMContext):
     question_data = await db.select_question(id=int(question_id))
     question_body = question_data.get("body")
     question_sender_id = question_data.get("sender_user_id")
-    created_at = question_data.get("created_at").strftime("%H:%M, %d/%m/%Y")
+    created_at = (question_data.get(
+        "created_at") + timedelta(hours=5)) .strftime("%H:%M, %d/%m/%Y")
 
     text = f"✅ Savolga javob yo'llandi.\n\n"
     text += f"<b>Yuborilgan vaqt:</b> {created_at}\n"
