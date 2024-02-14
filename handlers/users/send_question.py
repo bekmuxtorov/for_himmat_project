@@ -32,7 +32,7 @@ async def send_question(call: types.CallbackQuery, state: FSMContext):
     await call.message.delete()
     user = await db.select_user(telegram_id=call.from_user.id)
     is_registered, send_text = await build_message_group(message=call, user=user, question_text=question_text)
-    question_id = await db.add_question(call.from_user.id, question_text)
+    question_id = await db.add_question(for_who="for_admin", sender_user_id=call.from_user.id, body=question_text)
     await bot.send_message(chat_id=ADMIN_GROUP_ID, text=send_text, reply_markup=await reply_buttons(question_id))
 
     text = "✅ Savol muvaffaqiyatli yuborildi!"

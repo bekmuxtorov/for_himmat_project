@@ -15,7 +15,8 @@ async def writing_answer(message: types.Message, payload: str, state: FSMContext
     user = await db.select_user(telegram_id=message.from_user.id)
     question_data = await db.select_question(id=int(question_id))
     question_text = question_data.get("body")
-    is_registered, send_text = await build_message_group(message=message, user=user, question_text=question_text)
+    for_who = question_data.get("for_who")
+    is_registered, send_text = await build_message_group(message=message, user=user, question_text=question_text, for_who=for_who)
     msg_question = await message.answer(text=send_text)
     text = "Quyida javobingizni yozishingiz mumkin:"
     msg = await message.answer(text=text, reply_markup=make_buttons(["❌ Bekor qilish"]))
