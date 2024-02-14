@@ -1,3 +1,4 @@
+from aiogram.utils.deep_linking import get_start_link
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from loader import bot
 
@@ -67,7 +68,6 @@ def talk_buttons(titles: dict) -> InlineKeyboardMarkup:
 
 async def reply_buttons(question_id) -> InlineKeyboardMarkup:
     reply_button = InlineKeyboardMarkup(row_width=1)
-    from aiogram.utils.deep_linking import get_start_link
 
     link = await get_start_link(f"reply_question:{question_id}", encode=True)
     button = InlineKeyboardButton(
