@@ -19,7 +19,7 @@ async def writing_answer(message: types.Message, payload: str, state: FSMContext
     for_who = question_data.get("for_who")
     is_registered, send_text = await build_message_group(message=message, user=user, question_text=question_text, for_who=for_who)
     msg_question = await message.answer(text=send_text)
-    text = "Quyida javobingizni yozishingiz mumkin:"
+    text = "Quyida javobingizni yozishingiz mumkin:\n\nJavob faqat matndan iborat bo'lishi kerak!"
     msg = await message.answer(text=text, reply_markup=make_buttons(["❌ Bekor qilish"]))
     await state.update_data(question_id=question_id)
     await state.update_data(message_id=msg.message_id)
@@ -27,19 +27,29 @@ async def writing_answer(message: types.Message, payload: str, state: FSMContext
     await AnswerToUser.answer.set()
 
 
-@dp.message_handler(IsPrivateChat(), state=AnswerToUser.answer)
+@dp.message_handler(IsPrivateChat(), state=AnswerToUser.answer, content_types=types.ContentTypes.TEXT)
 async def reply_question(message: types.Message, state: FSMContext):
     data = await state.get_data()
     old_message_id = data.get("message_id")
     message_question_id = data.get("message_question_id")
-    await bot.delete_message(chat_id=message.from_user.id, message_id=int(old_message_id))
-    await bot.delete_message(chat_id=message.from_user.id, message_id=int(message_question_id))
-    await bot.delete_message(chat_id=message.from_user.id, message_id=message.message_id)
+    try:
+        await bot.delete_message(chat_id=message.from_user.id, message_id=int(old_message_id))
+        await bot.delete_message(chat_id=message.from_user.id, message_id=int(message_question_id))
+        await bot.delete_message(chat_id=message.from_user.id, message_id=message.message_id)
+    except Exception as e:
+        print(e)
+
     answer_text = message.text
     await state.update_data(answer_text=answer_text)
     text = f"<i>{answer_text}</i>\n\nJavob yuborilsinmi?"
     await message.answer(text=text, reply_markup=confirmation_button)
     await AnswerToUser.confirmation.set()
+
+
+@dp.message_handler(IsPrivateChat(), state=AnswerToUser.answer, content_types=types.ContentTypes.ANY)
+async def reply_question(message: types.Message, state: FSMContext):
+    await message.answer("⚡Yuqorida aytilganidek, javobingiz faqat matndan iborat bo'lishi kerak.\n\nMatn yuboring:")
+    await AnswerToUser.answer.set()
 
 
 @dp.callback_query_handler(IsPrivateChatForCallback(), text_contains="yes_send", state=AnswerToUser.confirmation)
